@@ -1,31 +1,47 @@
 package server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-        System.out.println("Server started!");
+        String[] fileDB = new String[100];
 
-        String address = "127.0.0.1";
-        int port = 23456;
-        ServerSocket server = new ServerSocket(port, 50, InetAddress.getByName(address));
-        Socket socket = server.accept();
-        DataInputStream input = new DataInputStream(socket.getInputStream());
-        DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+        Scanner scanner = new Scanner(System.in);
 
-        String receivedData = input.readUTF();
-        System.out.println("Received: " + receivedData);
+        while (true) {
+            String[] userCmd = scanner.nextLine().split(" ", 3);
 
-        String sentData = "A " + receivedData.split("me a ")[1] + " was sent!";
-        output.writeUTF(sentData);
-        System.out.print("Sent: " + sentData);
+            switch (userCmd[0]) {
+                case "get" -> {
+                    String cell = fileDB[Integer.parseInt(userCmd[1]) - 1];
+                    if (cell == null || (Integer.parseInt(userCmd[1]) < 1 || Integer.parseInt(userCmd[1]) > 100)) {
+                        System.out.println("ERROR");
+                    } else {
+                        System.out.println(fileDB[Integer.parseInt(userCmd[1]) - 1]);
+                    }
+                }
+                case "set" -> {
+                    if (Integer.parseInt(userCmd[1]) < 1 || Integer.parseInt(userCmd[1]) > 100) {
+                        System.out.println("ERROR");
+                    } else {
+                        fileDB[Integer.parseInt(userCmd[1]) - 1] = userCmd[2];
+                        System.out.println("OK");
+                    }
+                }
+                case "delete" -> {
+                    if (Integer.parseInt(userCmd[1]) < 1 || Integer.parseInt(userCmd[1]) > 100) {
+                        System.out.println("ERROR");
+                    } else {
+                        fileDB[Integer.parseInt(userCmd[1]) - 1] = null;
+                        System.out.println("OK");
+                    }
+                }
+                case "exit" -> {
+                    return;
+                }
+            }
+        }
     }
 }
