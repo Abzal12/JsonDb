@@ -1,15 +1,13 @@
 package client;
 
 import com.beust.jcommander.JCommander;
+import com.google.gson.Gson;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Main {
 
@@ -19,7 +17,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         try (
-
                 Socket socket = new Socket(InetAddress.getByName(ADDRESS), PORT);
                 DataInputStream input = new DataInputStream(socket.getInputStream());
                 DataOutputStream output = new DataOutputStream(socket.getOutputStream());
@@ -31,19 +28,18 @@ public class Main {
                     .build()
                     .parse(args);
 
-            String sentData = String.format("%s %d %s",
-                    args1.getRequestType(), args1.getCellIndex(), args1.getValue());
-            output.writeUTF(sentData);
-            sentData = sentData
-                    .replace("null", "")
-                    .replace("0", "")
-                    .trim();
-            System.out.println("Sent: " + sentData);
+            DbPiece dbPiece = new DbPiece(
+                    args1.getRequestType(),
+                    args1.getKey(),
+                    args1.getValue()
+            );
 
-            if (!sentData.equals("exit")) {
-                String receivedData = input.readUTF();
-                System.out.println("Received: " + receivedData);
-            }
+            String dbPiece1 = new Gson().toJson(dbPiece);
+            output.writeUTF(dbPiece1);
+            System.out.println("Sent: " + dbPiece1);
+
+            String receivedData = input.readUTF();
+            System.out.println("Received: " + receivedData);
         } catch (IOException e) {
             e.printStackTrace();
         }

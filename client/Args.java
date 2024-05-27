@@ -6,17 +6,17 @@ public class Args {
 
     @Parameter(names = "-t")
     private String requestType;
-    @Parameter(names = "-i")
-    private int cellIndex;
-    @Parameter(names = "-m")
+    @Parameter(names = "-k")
+    private String key;
+    @Parameter(names = "-v")
     private String value;
 
     public String getRequestType() {
         return requestType;
     }
 
-    public int getCellIndex() {
-        return cellIndex;
+    public String getKey() {
+        return key;
     }
 
     public String getValue() {
