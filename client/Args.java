@@ -10,6 +10,8 @@ public class Args {
     private String key;
     @Parameter(names = "-v")
     private String value;
+    @Parameter(names = "-in")
+    private String inputFromFile;
 
     public String getRequestType() {
         return requestType;
@@ -23,5 +25,7 @@ public class Args {
         return value;
     }
 
-
+    public String getInputFromFile() {
+        return inputFromFile;
+    }
 }
